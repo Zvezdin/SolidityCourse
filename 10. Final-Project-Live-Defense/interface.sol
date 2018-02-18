@@ -2,7 +2,7 @@ pragma solidity 0.4.19;
 
 contract DDNS {
     struct Receipt{
-        uint price;
+        uint amountPaidWei;
         uint timestamp;
         uint expires;
     }

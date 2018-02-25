@@ -6,6 +6,9 @@ contract Pokemons {
     Blastoise, Caterpie, Metapod, Butterfree, Weedle, Kakuna, Beedrill, Pidgey, Pidgeotto, Pidgeot, Rattata, Raticate,
     Spearow, Fearow, Ekans, Arbok, Pikachu, Raichu, Sandshrew, Sandslash, NidoranF, Nidorina, Nidoqueen, NidoranM }
     
+    //pokemon catch event. Note the "Log" prefix, which is a standart for event names.
+    event LogPokemonCaught(address indexed by, Pokemon indexed pokemon);
+    
     //a pokemon can be caught at most once every 15 seconds if not caught already
     modifier canPersonCatch(address person, Pokemon pokemon){
         require(now > players[person].lastCatch + 15 seconds);
@@ -19,8 +22,11 @@ contract Pokemons {
     }
     
     mapping(address => Player) players;
-    mapping(uint => address[]) pokemonHolders; //the key is uint256, because the amount of Pokemons may increase in the future
+    
+    //mapping can't take user-defined types as keys (ex. Pokemon)
+    //the key is uint256, because the amount of Pokemons may increase in the future
     //and pass the uint8 range
+    mapping(uint => address[]) pokemonHolders;
     
     //the hash of the pokemon holder and the pokemon is the key. This allows constant time lookup of whether a pokemon is caught by a person
     mapping(bytes32 => bool) hasPokemonMap;
@@ -38,6 +44,8 @@ contract Pokemons {
         pokemonHolders[uint(pokemon)].push(msg.sender);
         
         hasPokemonMap[keccak256(msg.sender, pokemon)] = true;
+        
+        LogPokemonCaught(msg.sender, pokemon);
     }
     
     function getPokemonsByPerson(address person) public view returns (Pokemon[]) {

@@ -17,11 +17,12 @@ contract Ownable {
         _;
     }
     
-    function transferOwnership(address newOwner) public onlyOwner {
+    //the owner shouldn't be transferred as this will mess up our members
+    /*function transferOwnership(address newOwner) public onlyOwner {
         require(newOwner != address(0));
         OwnershipTransferred(owner, newOwner);
         owner = newOwner;
-    }
+    }*/
 }
 
 contract Destructible is Ownable {
@@ -242,12 +243,12 @@ contract MemberVoter is Ownable, Destructible {
             votings[id].votesAgainst = votings[id].votesAgainst.add(1);
         }
         
-        if(votings[id].votesFor > memberCount.div(2)){ //if the vote is successful
+        if(votings[id].votesFor >= memberCount.div(2)){ //if the vote is successful
             _addMember(votings[id].proposedMember);
             _removeVoting(id);
             
             LogVotingEnded(id, true);
-        } else if(votings[id].votesAgainst > memberCount.div(2)) { //unsuccessful vote
+        } else if(votings[id].votesAgainst >= memberCount.div(2)) { //unsuccessful vote
             _removeVoting(id);
             
             LogVotingEnded(id, false);

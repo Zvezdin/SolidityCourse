@@ -115,7 +115,7 @@ contract MemberVoter is Ownable, Destructible {
     mapping(address => MemberLib.Member) public members;
     
     //we should increase or decrease this counter as members are added and removed
-    uint memberCount;
+    uint public memberCount;
     
     struct Voting {
         address proposedMember;
@@ -128,16 +128,18 @@ contract MemberVoter is Ownable, Destructible {
     
     //we should increase or decrease this counter as votings are added and removed
     //IMPORTANT! No member can be removed when there are active votings.
-    uint activeVotings;
+    uint public activeVotings;
     
     modifier canRemoveMember(address adr) {
         require(adr != owner); //the owner cannot be removed
         require(activeVotings == 0); //no member can be removed during votings
+        require(members[adr].adr != 0); //member should exist
         _;
     }
     
     modifier canAddMember(address adr) {
         require(adr != 0); //the address should exist
+        require(members[adr].adr == 0); //member shouldn't nexist
         _;
     }
     
@@ -162,6 +164,8 @@ contract MemberVoter is Ownable, Destructible {
     }
     
     function _addMember(address adr) private canAddMember(adr) {
+        assert(members[adr].adr == 0); //the person shouldn't be a member
+        
         members[adr].initialize(adr);
         memberCount = memberCount.add(1);
         
@@ -169,13 +173,15 @@ contract MemberVoter is Ownable, Destructible {
     }
     
     function _removeMember(address adr) private canRemoveMember(adr) { //private method that removes a member
+        assert(members[adr].adr != 0); //the person should be a member
+    
         members[adr].remove();
         memberCount = memberCount.sub(1); //this should never overflow
         
         LogMemberRemoved(adr);
     }
     
-    function removeMember(address adr) public onlyOwner { //owner-only interface to the private method
+    function removeMember(address adr) public canRemoveMember(adr) onlyOwner { //owner-only interface to the private method
         _removeMember(adr);
     }
     
@@ -217,11 +223,11 @@ contract MemberVoter is Ownable, Destructible {
     }
     
     //propose a new member. Returns the ID of the started voting
-    function proposeMember(address proposedMember) public onlyMember returns (bytes32) {
+    function proposeMember(address proposedMember) public onlyMember canAddMember(proposedMember) returns (bytes32) {
         require(!members[msg.sender].memberHasTimedOut()); //the modifier onlyMember may allow access to a timed out member if votings are active
         //make sure that a timed out member cannot start another voting (and keep being a member indefinitely)
         
-        _addVoting(proposedMember);
+        return _addVoting(proposedMember);
     }
     
     function vote(bytes32 id, bool voteFor) public onlyMember {

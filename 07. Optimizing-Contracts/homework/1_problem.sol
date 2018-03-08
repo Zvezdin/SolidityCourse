@@ -28,6 +28,11 @@ contract Ownable {
 
 }
 
+//The objective is to have a contract that has members. The members are added by the owner and hold information about their address, timestamp of being added to the contract and amount of funds donated. Each member can donate to the contract.
+//Many anti-patterns have been used to create them.
+//Some logical checks have been missed in the implementation.
+//Objective: lower the publish/execution gas costs as much as you can and fix the logical checks.
+
 contract MemberContr {
     struct Member {
         address adr;

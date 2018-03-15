@@ -49,7 +49,7 @@ function onButtonPressed(){
 		if(!err){
 			displayMessage("Success! Transaction hash: " + res.valueOf());
 		} else {
-			displayMessage("Something went wrong. Are you sure that it's been 15 seconds or you don't own it yet?);
+			displayMessage("Something went wrong. Are you sure that it's been 15 seconds or you don't own it yet?");
 			console.error(err);
 		}
 	});

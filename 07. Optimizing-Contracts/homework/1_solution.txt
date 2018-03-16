@@ -1,0 +1,9 @@
+The contract creates a contract for each of its members. This is highly inefficient and can be replaced with a library, where the member data is stored in our main contract.
+
+The problems using a Member contract is that we have to call it to get the state (member data), which is returned as a set of 3 variables and not as a structure, because external calls do not support structures. The "donated" function is also expensive, because it requires an expensive external call to change just one variable.
+
+Lines 43-46 initialize a structure line-by-line, whereas it can be initialized on a single line
+
+The array "memberList" is unneeded.
+
+The state variables tmp1, tmp2, tmp3 are only used locally in a modifier and therefore should be defined locally.

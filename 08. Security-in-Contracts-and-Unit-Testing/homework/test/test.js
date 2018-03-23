@@ -1,7 +1,7 @@
 const ico = artifacts.require("SimpleICO");
 
 const increaseTime = function(duration) {
-  const id = Date.now()
+  const id = Date.now() / 1000
 
   return new Promise((resolve, reject) => {
     web3.currentProvider.sendAsync({

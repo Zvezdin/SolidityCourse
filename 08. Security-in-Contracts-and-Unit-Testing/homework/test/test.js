@@ -1,8 +1,9 @@
 const ico = artifacts.require("SimpleICO");
 
 const increaseTime = function(duration) {
-  const id = Date.now()
-
+  const id = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+  console.log("\t\t - attempting to add time : " + duration);
+  
   return new Promise((resolve, reject) => {
     web3.currentProvider.sendAsync({
       jsonrpc: '2.0',
@@ -17,7 +18,10 @@ const increaseTime = function(duration) {
         method: 'evm_mine',
         id: id+1,
       }, (err2, res) => {
-        return err2 ? reject(err2) : resolve(res)
+        if (err2) return reject(err12);
+        var newTimestamp = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+        console.log("\t\t - time set to : " + newTimestamp);
+        return resolve(newTimestamp);
       })
     })
   })

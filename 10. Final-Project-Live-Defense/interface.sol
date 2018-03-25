@@ -21,6 +21,9 @@ contract DDNS {
     function getIP(bytes domain) public view returns (bytes4) {}
     
     function getPrice(bytes domain) public view returns (uint) {}
+
+    //function for the optional requirement for a withdraw function. Implement if you want.
+    function withdraw() public {}
 }
 
 contract Marketplace {
@@ -36,6 +39,9 @@ contract Marketplace {
     function getProducts() public view returns(bytes32[]) {}
     
     function getPrice(bytes32 ID, uint quantity) public view returns (uint) {}
+
+    //function for the optional requirement for a withdraw function. Implement if you want.
+    function withdraw() public {}
 }
 
 

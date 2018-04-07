@@ -1,0 +1,4 @@
+The author solutions are found in the following Git repo:
+https://bitbucket.org/zvezdin_o/soliditycourseprojects
+
+
